@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hermann Ebbinghaus Illusion Animated</title>
+  </head>
+  <body>
+    <div
+      class="text"
+      style="
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 700px;
+        text-align: center;
+      "
+    >
+      <h3>
+        Hermann Ebbinghaus Illusion both center circle size is static
+        size
+      </h3>
+    </div>
+    <canvas
+      id="canvas1"
+      width="700"
+      height="700"
+      style="
+        border: 2px solid red;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      "
+    ></canvas>
+    <script>
+      const canvas = document.getElementById("canvas1");
+      const ctx = canvas.getContext("2d");
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const t = Math.sin(new Date().getTime() / 1000) ** 2;
+        requestAnimationFrame(animate);
+
+        drawFlower({
+          centerX: canvas.width / 2,
+          centerY: canvas.height / 2,
+          innerRad: 25,
+          outerRad: lerp(100, 50, t),
+          petalRad: lerp(45, 15, t),
+          petalCount: 6,
+        });
+      }
+      animate();
+
+      function lerp(a, b, t) {
+        return a + (b - a) * t;
+      }
+
+      function drawFlower({
+        centerX,
+        centerY,
+        innerRad,
+        outerRad,
+        petalRad,
+        petalCount,
+      }) {
+        ctx.beginPath();
+        ctx.fillStyle = " orange";
+        ctx.arc(centerX, centerY, innerRad, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.lineWidth = petalRad * 2;
+        ctx.lineCap = "round";
+        const spacing = (2 * Math.PI * outerRad) / petalCount;
+        ctx.setLineDash([0, spacing]);
+
+        ctx.arc(centerX, centerY, outerRad, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    </script>
+  </body>
+</html>
